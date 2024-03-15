@@ -6,8 +6,6 @@ COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt --user
 
-
-
 FROM cgr.dev/chainguard/python:latest
 
 WORKDIR /app
@@ -19,5 +17,7 @@ ENV PATH=$PATH:/home/nonroot/.local/bin
 COPY app.py .
 COPY static/ static/
 COPY templates/ templates/
+
+EXPOSE 5000
 
 ENTRYPOINT ["flask", "run", "--host=0.0.0.0"]
