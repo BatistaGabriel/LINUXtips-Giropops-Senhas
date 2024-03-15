@@ -2,7 +2,7 @@
 FROM python:3.8-alpine
 
 # Instale o Redis
-RUN apk add --no-cache redis
+RUN apk add -U --no-cache redis
 
 # Defina o diretório de trabalho
 WORKDIR /app
