@@ -16,6 +16,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Exponha a porta 5000 para a aplicação Flask
 EXPOSE 5000
 
+# Defina a variável de ambiente do Redis
+ENV REDIS_HOST="localhost"
+
 # Inicie o servidor Redis e a aplicação Flask quando o contêiner for iniciado
 CMD ["sh", "-c", "redis-server --daemonize yes && FLASK_APP=app.py flask run --host=0.0.0.0"]
 
