@@ -1,24 +1,25 @@
-# Use a imagem base Python 3.8 no Alpine Linux
-FROM python:3.8-alpine
+FROM cgr.dev/chainguard/python:latest-dev as builder
 
-# Instale o Redis
-RUN apk add -U --no-cache redis
-
-# Defina o diretório de trabalho
 WORKDIR /app
 
-# Copie os arquivos da aplicação Flask
-COPY . .
+COPY requirements.txt .
 
-# Instale as dependências Python
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt --user
 
-# Exponha a porta 5000 para a aplicação Flask
-EXPOSE 5000
 
-# Defina a variável de ambiente do Redis
-ENV REDIS_HOST="localhost"
 
-# Inicie o servidor Redis e a aplicação Flask quando o contêiner for iniciado
-CMD ["sh", "-c", "redis-server --daemonize yes && FLASK_APP=app.py flask run --host=0.0.0.0"]
+FROM cgr.dev/chainguard/python:latest
 
+WORKDIR /app
+
+COPY --from=builder /home/nonroot/.local/lib/python3.12/site-packages /home/nonroot/.local/lib/python3.12/site-packages
+COPY --from=builder /home/nonroot/.local/bin  /home/nonroot/.local/bin
+ENV PATH=$PATH:/home/nonroot/.local/bin
+
+COPY app.py .
+COPY static/ static/
+COPY templates/ templates/
+
+ENV REDIS_HOST="redis-server"
+
+ENTRYPOINT ["flask", "run", "--host=0.0.0.0"]
