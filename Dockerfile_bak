@@ -1,0 +1,8 @@
+FROM python:3.8-alpine3.18
+WORKDIR /app
+COPY . ./
+RUN apk update && apk add --no-cache redis && ln -sf python3 /usr/bin/python && python3 -m ensurepip && pip3 install --no-cache-dir --upgrade redis && pip3 install --no-cache-dir -r requirements.txt
+ENV REDIS_HOST="localhost"
+CMD ["redis-server"]
+ENTRYPOINT ["flask"]
+CMD ["run", "--host=0.0.0.0"]
