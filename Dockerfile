@@ -20,6 +20,4 @@ COPY app.py .
 COPY static/ static/
 COPY templates/ templates/
 
-ENV REDIS_HOST="redis-server"
-
 ENTRYPOINT ["flask", "run", "--host=0.0.0.0"]
